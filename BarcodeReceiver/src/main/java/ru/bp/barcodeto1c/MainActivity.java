@@ -32,8 +32,7 @@ public class MainActivity extends Activity {
                 toastMessage = intent.getStringExtra(MESSAGE);
                 if (!toastMessage.isEmpty()) {
                     Toast.makeText(this, toastMessage, Toast.LENGTH_LONG).show();
-            }
-
+                }
             }
         }
         // No need to show activity, it's must created for initialize receivers and service...

@@ -4,10 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-/**
- * Created by slade on 06.03.2018.
- */
-
 public class BarcodeService extends Service {
     public static boolean isActive = false;
 
