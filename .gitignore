@@ -1,0 +1,48 @@
+## Common
+*.class
+*.dex
+*.war
+*.ear
+*.apk
+*.ap_
+*.jks
+local.properties
+.metadata/
+bin/
+gen/
+release/
+
+## Eclipse
+.classpath
+.project
+.settings/
+
+## IntelliJ IDEA
+*.iml
+*.iws
+.idea/
+out/
+
+## Android Studio
+.navigation/
+captures/
+
+## Maven
+log/
+target/
+
+## Gradle
+.gradle/
+build/
+
+## Proguard
+proguard/
+
+## Log Files
+*.log
+
+## Mac OS
+*.DS_Store
+
+## Windows
+Thumbs.db
