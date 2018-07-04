@@ -21,14 +21,13 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private static final String COMMAND_STOP = "STOP";
     private static final String MESSAGE = "Message";
 
-    private static final String VOICE_COMMMAND_START = "VOICE RECOGNITION";
-    private static final String SPEECH_COMMMAND_PLAY = "VOICE SPEECH";
-    private static final String SPEECH_MESSAGE = "SPEECH MESSAGE";
+    private static final String VOICE_COMMMAND_START = "VOICE_RECOGNITION";
+    private static final String SPEECH_COMMMAND_PLAY = "VOICE_SPEECH";
+    private static final String SPEECH_MESSAGE = "SPEECH_MESSAGE";
 
     private static final int VR_REQUEST_CODE = 0x000999;
     private static final int SPEECH_REQUEST_CODE = 0x000998;
 
-    //Text To Speech интерфейс
     private TextToSpeech repeatTTS;
 
 
@@ -72,11 +71,9 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
             }
         }
 
-        //подготовка движка TTS для проговаривания слов
+        // create intent to check tts engine
         Intent checkTTSIntent = new Intent();
-        //проверка наличия TTS
         checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-        //запуск checkTTSIntent интента
         startActivityForResult(checkTTSIntent, SPEECH_REQUEST_CODE);
 
         // No need to show activity, it's must created for initialize receivers and service...
@@ -89,18 +86,17 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     }
 
     private void listenToSpeech(){
-        //запускаем интент, распознающий речь и передаем ему требуемые данные
-        Intent listenIntent=new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        //указываем пакет
+        Intent listenIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         listenIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getClass().getPackage().getName());
-        //В процессе распознования выводим сообщение
+        // message shown to user in В процессе распознования выводим сообщение
         listenIntent.putExtra(RecognizerIntent.EXTRA_PROMPT,getResources().getString(R.string.voice_recognition_prompt));
-        //устанавливаем модель речи
+        // we search model, like user speak for web apps (chrome, youtube, etc)
+        // free form modek, common model, not specialized
         listenIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
-        //указываем число результатов, которые могут быть получены
+        // max recognition result returned
         listenIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,10);
 
-        //начинаем прослушивание
+        // start to listen
         startActivityForResult(listenIntent, VR_REQUEST_CODE);
     }
 
@@ -112,35 +108,34 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        //проверяем результат распознавания речи
+        // if return recognition result
         if (requestCode == VR_REQUEST_CODE && resultCode == RESULT_OK)
         {
-            //Добавляем распознанные слова в список результатов
+            // Add recognition words to a result
             ArrayList<String> suggestedWords = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             StringBuilder sb = new StringBuilder();
             for (String s : suggestedWords) {
                 sb.append(s);
                 sb.append(";");
             }
-            //Передаем список возможных слов
+            // send broadcast to 1c
             sendIntentTo1C(sb.toString());
         }
 
-        //returned from TTS data check
+        // returned from TTS data check
         if (requestCode == SPEECH_REQUEST_CODE) {
-            //все необходимые приложения установлены, создаем TTS
+            // tts engine is set, create it
             if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS)
                 repeatTTS = new TextToSpeech(this, this);
             else {
-                //движок не установлен, предположим пользователю установить его
-                //интент, перебрасывающий пользователя на страницу TSS в Google Play
+                // tts engine is not install, try to get it
+                // tts engine install intent from google play
                 Intent installTTSIntent = new Intent();
                 installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
                 startActivity(installTTSIntent);
             }
         }
 
-        //вызываем метод родительского класса
         super.onActivityResult(requestCode, resultCode, data);
     }
 
