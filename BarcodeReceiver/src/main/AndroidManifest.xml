@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="ru.bp.barcodeto1c"
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    package="ru.bp.barcodeto1c"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -10,7 +11,8 @@
 
         <receiver
             android:name=".BootBroadcast"
-            android:enabled="true">
+            android:enabled="true"
+            tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -20,9 +22,12 @@
         <receiver
             android:name=".BarcodeReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="com.honeywell.intent.action.SCAN_RESULT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.sunmi.scanner.ACTION_DATA_CODE_RECEIVED"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </receiver>
@@ -30,16 +35,19 @@
         <service
             android:name=".BarcodeService"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true"
+            tools:ignore="Instantiatable" />
 
         <service
             android:name=".TTSService"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true"
+            tools:ignore="Instantiatable" />
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
