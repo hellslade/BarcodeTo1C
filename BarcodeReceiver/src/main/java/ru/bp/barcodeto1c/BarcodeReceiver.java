@@ -9,15 +9,22 @@ import android.widget.Toast;
 
 public class BarcodeReceiver extends BroadcastReceiver {
     private static final String TAG = "BarcodeReceiver";
-    private static final String BARCODE_PARAM = "decode_rslt";
+    private static final String HONEYWELL_BARCODE_PARAM = "decode_rslt"; // HoneyWell EDA50K
+    private static final String SUNMI_BARCODE_PARAM = "data"; // SUNMI L2
     private static boolean isDebug = false;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         isDebug = ((context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
-        if (isDebug) Log.v(TAG, "onReceive " + intent.getAction());
+        String intentAction = intent.getAction();
+        if (isDebug) Log.v(TAG, "onReceive " + intentAction);
 
-        String barcode = intent.getStringExtra(BARCODE_PARAM);
+        String barcode = "";
+        if (intentAction.equals("com.honeywell.intent.action.SCAN_RESULT")) {
+            barcode = intent.getStringExtra(HONEYWELL_BARCODE_PARAM);
+        } else if (intentAction.equals("com.sunmi.scanner.ACTION_DATA_CODE_RECEIVED")) {
+            barcode = intent.getStringExtra(SUNMI_BARCODE_PARAM);
+        }
 
         if (BarcodeService.isActive) {
             if (isDebug) Log.v(TAG, "BARCODE " + barcode);
